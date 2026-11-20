@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="#111110" name="theme-color"/>
+<meta content="yes" name="mobile-web-app-capable"/>
+<title>Mafia Night — مشروع مقسّم</title>
+<link href="./css/tokens.css" rel="stylesheet"/>
+<link href="./css/app.css" rel="stylesheet"/>
+<link href="./css/mobile.css" rel="stylesheet"/>
+<meta content="واجهة عربية لإدارة لعبة Mafia Night، بملفات منفصلة وأسماء محفوظة محليًا." name="description"/></head>
+<body>
+<div class="app">
+<main class="main">
+<header class="topbar">
+<span hidden="" id="sideStatus"></span>
+<div class="topline">
+<div class="brandline"><span class="brandline-mark"><svg aria-hidden="true" focusable="false" viewbox="0 0 44 44"><path d="M7 17c3-7 27-7 30 0M5 19h34l-5 3H10zM12 23v14h20V23M15 29l7-5 7 5M15 35l7-5 7 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35"></path><path d="M10 39h24" fill="none" stroke="currentColor" stroke-width=".9"></path></svg></span><div><div class="brandline-title">MAFIA NIGHT</div><div class="brandline-note">دفتر الحكم</div></div></div>
+<div class="top-actions"><div class="pill">الجولة <strong id="roundNo">01</strong></div><div class="pill">اللاعبون <strong id="topPlayers">8</strong></div><div class="pill"><span class="dot"></span> <strong id="gameStatus">تجهيز</strong></div><button aria-label="أدوات الحكم" class="top-tool-btn" id="toolsButton" type="button">أدوات الحكم</button><button class="top-tool-btn secondary" hidden="True" id="returnToGame" type="button">عودة إلى المباراة</button></div>
+</div>
+<div class="page-heading"><div><div class="eyebrow">ليلة المافيا · إدارة المباراة</div><h1 id="pageTitle">جهّز طاولتك</h1><div class="top-sub" id="pageSub">اكتبوا الأسماء، اختاروا الأدوار، وبعدها ابدأوا توزيع البطاقات.</div></div></div><div aria-label="مراحل المباراة" aria-live="polite" class="workflow-progress" id="workflowProgress"></div>
+</header>
+<!-- SETUP -->
+<section class="view active" id="view-setup">
+<div class="section-head"><div><div class="kicker">01 / التحضير</div><h2>تجهيز المباراة</h2><p>أدخل أسماء الموجودين حول الطاولة. أي مقعد لا تخصص له دورًا سيصبح مواطنًا صالحًا.</p></div><span class="flag">الحكم خارج العدد</span></div>
+<div aria-label="مشهد افتتاحي للعبة مافيا نايت" class="story-banner intro-banner">
+<img alt="شارع قديم تحت ضوء القمر وشخص غامض يراقب المدينة" fetchpriority="high" src="./assets/noir-city.webp"/>
+<div class="story-caption">
+<span class="story-index">ملف القضية 01</span>
+<strong>المدينة لا تنام</strong>
+<p>جهّز المقاعد، وزّع الأدوار، ودع الحكاية تبدأ.</p>
+</div>
+<span aria-hidden="true" class="story-side-note">MAFIA NIGHT / CASE FILE</span>
+</div>
+<div class="grid2">
+<div class="panel"><div class="panel-inner">
+<div class="panel-title">بيانات المباراة <small>الإعداد الأساسي</small></div>
+<div class="field"><label class="field-label" for="matchName">اسم المباراة (اختياري)</label><input class="input" id="matchName" placeholder="مثال: الجولة الأولى" value="ليلة المافيا"/></div>
+<div class="field"><label class="field-label">عدد اللاعبين المشاركين</label><div class="row between"><div class="count-box"><button id="minusPlayers" type="button">−</button><output id="playerCount">8</output><button id="plusPlayers" type="button">+</button></div><span class="small muted">لا يشمل الحكم</span></div></div>
+<div class="field roster-manager" id="rosterManager">
+<div class="roster-heading">
+<div>
+<label class="field-label" for="newPlayerName">أسماء اللاعبين المشاركين</label>
+<p class="small muted">أضف الاسم مرة واحدة، وسيبقى محفوظًا على هذا الجهاز.</p>
+</div>
+<span class="roster-count" id="rosterCount">0 لاعب</span>
+</div>
+<div class="roster-add-row">
+<input autocomplete="off" class="input" id="newPlayerName" maxlength="32" placeholder="اكتب اسم لاعب جديد" type="text"/>
+<button class="btn" id="addPlayerName" type="button">إضافة الاسم</button>
+</div>
+<div class="roster-current-wrap">
+<div class="subhead">قائمة هذه المباراة</div>
+<div class="roster-chips" id="currentRosterList"></div>
+</div>
+<div class="roster-library-grid">
+<div class="field compact-field">
+<label class="field-label" for="savedPlayerSelect">اسم محفوظ</label>
+<div class="roster-inline-row">
+<select class="select" id="savedPlayerSelect"></select>
+<button aria-label="إضافة الاسم المحفوظ" class="mini-btn" id="addSavedPlayer" type="button">+</button>
+</div>
+</div>
+<div class="field compact-field">
+<label class="field-label" for="savedRosterSelect">قائمة محفوظة بالكامل</label>
+<select class="select" id="savedRosterSelect"></select>
+</div>
+</div>
+<div class="roster-save-row">
+<input class="input" id="rosterLabelInput" maxlength="32" placeholder="اسم القائمة المحفوظة" type="text" value="أصدقاء المافيا"/>
+<button class="btn secondary" id="saveRosterGroup" type="button">حفظ القائمة</button>
+<button class="btn secondary" id="loadRosterGroup" type="button">تحميل</button>
+<button class="btn secondary" id="deleteRosterGroup" type="button">حذف</button>
+</div>
+<div class="roster-backup-row">
+<button class="text-action" id="exportRosterBackup" type="button">تنزيل نسخة احتياطية للأسماء</button>
+<label class="text-action file-action" for="importRosterFile">استعادة نسخة احتياطية</label>
+<input accept="application/json,.json" hidden="" id="importRosterFile" type="file"/>
+</div>
+<div class="name-count-line"><span id="nameCountHint">0 من 24 أسماء</span><span>العدد يتحدث تلقائيًا</span></div>
+<textarea aria-hidden="true" class="textarea" hidden="" id="playerNames"></textarea>
+</div>
+<div class="panel-title u-mt-19">تشكيلة الأدوار <small>الأدوار الاختيارية</small></div>
+<div class="setup-presets"><button id="balancedPreset" type="button">تشكيلة أساسية</button><button id="allRolesPreset" type="button">تفعيل كل الأدوار</button></div>
+<div class="role-settings" id="roleSettings"></div>
+<div class="totalbar"><span>الأدوار الخاصة المحددة</span><strong id="specialTotal">6 / 8</strong><span id="citizenCount">مواطنون: 2</span></div>
+<div class="note" id="setupNote">المتبقي يُوزّع تلقائيًا على دور المواطن الصالح. تأكد أن مجموع الأدوار لا يتجاوز عدد اللاعبين.</div>
+<div class="btn-row"><button class="btn full" id="beginDeal">اعتماد التشكيلة والانتقال للتوزيع</button></div>
+</div></div>
+<div>
+<div class="panel"><div class="panel-inner">
+<div class="panel-title">ملخص قواعد المباراة <small>المعتمد حاليًا</small></div>
+<div class="stats"><div class="stat"><label>وقت كشف البطاقة</label><strong>20</strong><span>ثانية لكل لاعب</span></div><div class="stat"><label>وقت الحديث</label><strong>90</strong><span>ثانية لكل لاعب</span></div><div class="stat"><label>مرات التخطي</label><strong>2</strong><span>لكل لاعب بالمباراة</span></div></div>
+<div class="u-mt-15">
+<div class="checkline"><span>المحتالان يستيقظان معًا</span><span class="flag">ثابت</span></div>
+<div class="checkline"><span>الطبيب بعد مرحلة الإمبوستر</span><span class="flag">ثابت</span></div>
+<div class="checkline"><span>القناص بعد الطبيب</span><span class="flag">ثابت</span></div>
+<div class="checkline"><span>البومبر لا يستيقظ ليلًا</span><span class="flag">ثابت</span></div>
+<div class="checkline"><span>المستبعدون لا يتكلمون ولا يلمّحون</span><span class="flag">قاعدة لعب</span></div>
+<div class="checkline"><span>المحتالان يعرفان بعضهما</span><span class="flag">ثابت</span></div>
+</div>
+<div class="note red">تظل قائمة التسليم بلا أدوار. البطاقة تظهر لصاحبها فقط، ثم تختفي قبل انتقال الهاتف إلى اللاعب التالي.</div>
+</div></div>
+<div class="panel u-mt-13"><div class="panel-inner">
+<div class="panel-title">ترتيب الليل <small>من دون أدوار غير مفعّلة</small></div>
+<div class="queue">
+<div class="queue-item"><span>01 — الإمبوستر القاتل + الصامت</span><em>معًا</em></div>
+<div class="queue-item"><span>02 — الطبيب</span><em>بعدهم</em></div>
+<div class="queue-item"><span>03 — القناص</span><em>أخيرًا</em></div>
+</div>
+</div></div>
+</div>
+</div>
+</section>
+<!-- DEAL -->
+<section class="view" id="view-deal">
+<div class="section-head"><div><div class="kicker">02 / توزيع الأدوار</div><h2>توزيع البطاقات السرية</h2><p>أعطِ الهاتف للاعب المكتوب اسمه. انتظر حتى يخفي بطاقته قبل تمريره.</p></div><span class="flag" id="dealProgressLabel">لم يبدأ التوزيع</span></div>
+<div class="deal-layout">
+<div class="panel"><div class="panel-inner">
+<div class="row between"><div class="panel-title u-m-0">بطاقة اللاعب الحالي</div><span class="small muted" id="dealCounter">0 / 8</span></div>
+<div class="secret-card" id="secretCard">
+<div class="secret-top">مافيا نايت — بطاقة سرية</div><div class="secret-emblem">M</div><div class="secret-role">البطاقة لم تُوزّع بعد</div><div class="secret-desc">ابدأ التوزيع من زر التحضير، ثم مرّر الهاتف لاعبًا بعد لاعب.</div><div class="secret-meta">هذه البطاقة شخصية ولا يحق لأحد غير صاحبها قراءتها.</div>
+</div>
+<div class="row between u-mt-14"><div class="small muted" id="dealInstruction">لا توجد بطاقة معروضة.</div><div class="deal-timer" id="dealTimer">—</div></div>
+<div class="progress-track progress-wide"><span id="dealProgress"></span></div>
+<div class="btn-row"><button class="btn" disabled="" id="showNext">ابدأ كشف البطاقة</button><button class="btn secondary" disabled="" id="skipDealTimer">إنهاء المؤقت</button></div>
+<div class="note">تظهر أسماء زملاء الإمبوستر القاتل والصامت على بطاقات الإمبوستر فقط. لا تظهر هذه العلاقة في لوحة الحكم العادية.</div>
+</div></div>
+<div class="panel"><div class="panel-inner"><div class="panel-title">قائمة التسليم <small>الترتيب عشوائي للأدوار</small></div><div class="queue" id="dealQueue"><div class="empty-state">ستظهر قائمة اللاعبين هنا بعد اعتماد التشكيلة.</div></div><div class="note red">بعد انتهاء 20 ثانية، يختفي خيار البطاقة وتظهر خطوة تمرير الهاتف للاعب التالي.</div></div></div>
+</div>
+</section>
+<!-- NIGHT -->
+<section class="view" id="view-night">
+<div class="section-head"><div><div class="kicker">03 / إدارة الليل</div><h2>إدارة الليل</h2><p>اتبع النداء بالترتيب، وسجّل اختيار كل دور هنا من دون عرض الأهداف على بقية اللاعبين.</p></div><span class="flag" id="nightRound">الليلة 01</span></div>
+<div aria-label="مشهد المدينة أثناء الليل" class="story-banner night-banner">
+<img alt="مدينة ليلية ومحقق يراقب الشارع" loading="lazy" src="./assets/noir-night.webp"/>
+<div class="story-caption">
+<span class="story-index">سجل الليل</span>
+<strong>كل اختيار له أثر</strong>
+<p>سجّل الأفعال بهدوء، ولا تكشف الأهداف قبل الصباح.</p>
+</div>
+<span aria-hidden="true" class="story-side-note">NIGHT WATCH</span>
+</div>
+<div class="phase-strip" id="nightPhases">
+<div class="phase-chip active"><span class="phase-num">01</span><div><b>الإمبوستر</b><small>القتل والكتم معًا</small></div></div>
+<div class="phase-chip"><span class="phase-num">02</span><div><b>الطبيب</b><small>اختيار الحماية</small></div></div>
+<div class="phase-chip"><span class="phase-num">03</span><div><b>القناص</b><small>إطلاق أو تأجيل</small></div></div>
+</div>
+<div class="grid2">
+<div class="panel"><div class="panel-inner">
+<div class="panel-title"><span id="nightStageTitle">مرحلة الإمبوستر</span><small id="nightStageMeta">المرحلة 1 من 3</small></div>
+<div id="nightStageContent"><div class="note red">يستيقظ الإمبوستر القاتل والإمبوستر الصامت معًا. القاتل يحدد الضحية، والصامت يحدد من يُمنع من الكلام.</div><div class="action-box"><h3>هدف القتل</h3><p>اختر لاعبًا حيًا ليكون هدف الإمبوستر القاتل.</p><div class="target-list" id="killTargets"></div></div><div class="action-box"><h3>هدف الكتم</h3><p>اختر لاعبًا حيًا لن يستطيع الكلام في النهار التالي.</p><div class="target-list" id="muteTargets"></div></div></div>
+<div class="btn-row"><button class="btn full" id="confirmNightStage">تأكيد الاختيارات والانتقال للطبيب</button></div>
+</div></div>
+<div>
+<div class="panel"><div class="panel-inner"><div class="panel-title">اللاعبون الأحياء <small>اختيار الأهداف</small></div><div class="player-list" id="nightPlayerList"></div></div></div>
+<div class="panel host-cue-panel u-mt-13"><div class="panel-inner"><div class="panel-title">ما تقوله الآن <small>تذكير للحكم</small></div><div class="host-cue" id="moderatorCue">الإمبوستر، افتحوا أعينكم. اختاروا هدف القتل وهدف الكتم، ثم عودوا للنوم.</div><div class="small muted u-small-spaced">ترتيب النداء ثابت: الإمبوستر معًا، ثم الطبيب، ثم القناص. إذا لم يكن الدور موجودًا أو لم يبقَ صاحبه حيًا، يتخطاه التطبيق.</div></div></div>
+</div>
+</div>
+</section>
+<!-- DAY -->
+<section class="view" id="view-day">
+<div class="section-head"><div><div class="kicker">04 / النهار والنقاش</div><h2>النهار والنقاش</h2><p>اعرض نتيجة الليل، ثم امنح كل لاعب حيّ 90 ثانية للكلام.</p></div><span class="flag" id="dayRound">اليوم 01</span></div>
+<div aria-label="مشهد شروق الشمس فوق المدينة واجتماع اللاعبين" class="day-scene" role="img">
+<svg aria-hidden="true" class="day-scene-art" preserveaspectratio="xMidYMid slice" viewbox="0 0 1100 230">
+<rect fill="#24241f" height="230" width="1100"></rect>
+<circle cx="850" cy="72" fill="#a76e5e" r="38"></circle>
+<path d="M0 132 80 92 145 119 218 80 282 126 350 96 430 131 510 90 583 129 665 83 740 126 815 93 890 126 968 85 1100 126V230H0Z" fill="#37342d"></path>
+<path d="M0 155h76v-47h42v47h48v-68h56v68h48v-34h43v34h78v-60h60v60h42v-44h54v44h62v-73h62v73h44v-42h52v42h65v-58h54v58h66v-32h54v32h65v75H0Z" fill="#171815"></path>
+<g fill="#b39a76" opacity=".72"><rect height="13" width="8" x="92" y="125"></rect><rect height="13" width="8" x="188" y="105"></rect><rect height="13" width="8" x="205" y="105"></rect><rect height="13" width="8" x="403" y="114"></rect><rect height="13" width="8" x="423" y="114"></rect><rect height="13" width="8" x="693" y="105"></rect><rect height="13" width="8" x="713" y="105"></rect><rect height="13" width="8" x="1002" y="109"></rect></g>
+<path d="M0 193q180-28 360 0t360 0 380 0v37H0Z" fill="#10120f"></path>
+<g fill="#0d0f0d"><path d="M170 230v-32q0-18 16-18t16 18v32Zm-7-45 23-31 23 31Z"></path><path d="M270 230v-29q0-16 14-16t14 16v29Zm-6-42 20-27 20 27Z"></path><path d="M840 230v-32q0-19 17-19t17 19v32Zm-7-47 24-33 24 33Z"></path><path d="M930 230v-28q0-16 14-16t14 16v28Zm-6-41 20-28 20 28Z"></path></g>
+<g fill="none" opacity=".75" stroke="#8e7761" stroke-width="2"><path d="M545 230v-25m-10 0h20m-10-9v-9m0 0-8-8m8 8 8-8"></path><path d="M585 230v-18m-8 0h16m-8-8v-7"></path></g>
+</svg>
+<div class="day-scene-caption"><span class="story-index">بداية النهار</span><strong>الآن تبدأ المواجهة</strong><p>استمعوا لبعضكم، ناقشوا الشكوك، ثم صوّتوا.</p></div>
+<span aria-hidden="true" class="story-side-note">DAYLIGHT / ROUND TABLE</span>
+</div>
+<div class="grid2">
+<div class="panel"><div class="panel-inner">
+<div class="panel-title">المتحدث الحالي <small>90 ثانية كحد أقصى</small></div>
+<div class="speech-name" id="speakerName">لم يبدأ النقاش</div>
+<div class="speech-clock" id="speechClock">01:30</div><div class="clock-caption" id="speechHint">اختر بدء المتحدث الأول.</div>
+<div class="speech-actions"><button class="btn" id="startSpeech">ابدأ المؤقت</button><button class="btn secondary" disabled="" id="finishSpeech">خلصت كلامي</button><button class="btn subtle" disabled="" id="skipSpeech">تخطٍ 0 / 2</button></div>
+<div class="note red">من يتجاوز 90 ثانية يحصل على مخالفة واحدة. اللاعب المكتوم لا يتكلم في هذا اليوم، لكنه يبقى قادرًا على التصويت ما لم يكن مستبعدًا.</div>
+<div class="day-next" hidden="" id="dayNextWrap"><button class="btn full" id="startVoting">انتهى النقاش، افتح التصويت</button></div>
+</div></div>
+<div class="panel"><div class="panel-inner"><div class="panel-title"><span>ترتيب المتحدثين</span><small>الأحياء وغير المكتومين</small><button aria-label="إضافة متحدث" class="round-add-btn" id="addSpeakerBtn" title="إضافة متحدث" type="button">+</button></div>
+<div class="speaker-add-panel" hidden="" id="speakerAddPanel">
+<label class="field-label" for="speakerToAdd">اختر لاعبًا من القائمة</label>
+<div class="roster-inline-row">
+<select class="select" id="speakerToAdd"></select>
+<button class="btn" id="confirmAddSpeaker" type="button">إضافة للدور</button>
+</div>
+<p class="small muted">لا تكتب الاسم هنا؛ اختره من أسماء اللاعبين الموجودين.</p>
+</div><div class="queue" id="speakerQueue"><div class="empty-state">ابدأ مرحلة النهار بعد حل أحداث الليل.</div></div></div></div>
+</div>
+<div class="panel u-mt-14"><div class="panel-inner"><div class="panel-title">ملخص صباح اليوم <small>ما يعلنه الحكم</small></div><div class="empty-state" id="morningSummary">لم تُسجّل نتيجة ليلية بعد.</div></div></div>
+</section>
+<!-- VOTE -->
+<section class="view" id="view-vote">
+<div class="section-head"><div><div class="kicker">05 / التصويت</div><h2>التصويت السري</h2><p>مرّر الهاتف لكل لاعب على حدة. لن تظهر الأصوات أو النتائج قبل أن يغلق الحكم التصويت.</p></div><span class="flag">ورقة اقتراع خاصة</span></div>
+<div class="grid2">
+<div class="panel"><div class="panel-inner">
+<div class="panel-title">دور التصويت <small id="voteCounter">0 / 0</small></div>
+<select aria-hidden="true" class="select" id="voterSelect" tabindex="-1"></select>
+<div aria-live="polite" class="vote-process">
+<div class="vote-step" id="voteStepText">تجهيز ورقة الاقتراع</div><div class="vote-who" id="voterLabel">اللاعب الذي يصوّت</div>
+<div class="vote-current" id="voteCurrentName">لم يبدأ التصويت</div>
+<div class="vote-desc" id="voteDescription">عندما يصبح الهاتف مع اللاعب الصحيح، يضغط على الزر لفتح ورقته.</div>
+<div class="vote-pass" id="votePassPanel"><button class="btn full" id="openBallot">أنا جاهز، افتح ورقتي</button></div>
+<div class="vote-ballot" hidden="" id="voteBallotPanel">
+<label class="field-label" for="voteTarget">من تريد إخراجه؟</label>
+<select class="select" id="voteTarget"></select>
+<button class="btn full" id="castVote">تثبيت صوتي</button>
+</div>
+<div class="vote-recorded" hidden="" id="voteRecordedPanel">
+<div class="small u-green-note">تم تسجيل الصوت بسرية.</div>
+<button class="btn secondary full" id="voteNextPlayer">مرّر الهاتف إلى اللاعب التالي</button>
+</div>
+<div class="vote-countline" id="voteProgressText">الأصوات المسجلة تبقى مخفية حتى نهاية التصويت.</div><div class="vote-closed-panel" hidden="" id="voteClosedPanel"><strong>أُغلق التصويت</strong><p>لم تعد ورقة الاقتراع متاحة. يستطيع الحكم الآن إعلان النتيجة.</p></div>
+</div>
+<div class="btn-row"><button class="btn secondary" id="clearVotes">إعادة بدء التصويت</button></div>
+<div class="note">لا يرى اللاعب أصوات من سبقوه. لا يمكن التصويت للنفس، ويمكن اختيار الامتناع.</div>
+</div></div>
+<div class="panel"><div class="panel-inner"><div class="panel-title">النتيجة <small>مقفلة حتى إعلان الحكم</small></div><div class="queue" id="voteResults"><div class="empty-state">الأصوات مخفية حاليًا. ستظهر النتيجة بعد إغلاق التصويت.</div></div><div class="btn-row"><button class="btn full" id="closeVote">إغلاق التصويت وإعلان النتيجة</button><button class="btn secondary full" id="nextNight">بدء الليلة التالية</button></div></div></div>
+</div>
+</section>
+<!-- PLAYERS -->
+<section class="view" id="view-players">
+<div class="section-head"><div><div class="kicker">06 / إدارة اللاعبين</div><h2>اللاعبون والمخالفات</h2><p>أزرار سريعة لتسجيل المخالفات والاستبعاد. أسماء اللاعبين تبقى ظاهرة للحكم.</p></div><span class="flag">لوحة الحكم</span><button class="btn secondary return-inline" data-return-game="true" type="button">عودة إلى المباراة</button></div>
+<div class="grid2">
+<div class="panel"><div class="panel-inner"><div class="panel-title">قائمة اللاعبين <small>اضغط لتسجيل الإجراء</small></div><div class="player-list" id="playerAdminList"></div></div></div>
+<div>
+<div class="panel"><div class="panel-inner"><div class="panel-title">قواعد المخالفات <small>كما حددتها</small></div>
+<div class="checkline"><span>يتكلم أثناء نوم اللاعبين</span><span class="flag">+1</span></div>
+<div class="checkline"><span>يتكلم أثناء دور لاعب آخر</span><span class="flag">+1</span></div>
+<div class="checkline"><span>يحلف / يحاول التأثير أثناء الليل</span><span class="flag">+1</span></div>
+<div class="checkline"><span>يفتح عينيه أو يرفع رأسه للتجسس</span><span class="flag dead">استبعاد فوري</span></div>
+<div class="note red">حدّ المخالفات الذي يؤدي للاستبعاد لم يُحسم بعد؛ لذلك لا يستبعد التطبيق اللاعب تلقائيًا بسبب عدد المخالفات. اللاعب المستبعد لا يتكلم ولا يلمّح ولا يؤثر في التصويت.</div>
+</div></div>
+<div class="panel u-mt-13"><div class="panel-inner"><div class="panel-title">إجراء سريع <small>للحكم</small></div><div class="field"><label class="field-label">اللاعب</label><select class="select" id="adminTarget"></select></div><div class="btn-row"><button class="btn" id="addFoul">إضافة مخالفة +1</button><button class="btn danger" id="peekOut">استبعاد بسبب التجسس</button></div></div></div>
+</div>
+</div>
+</section>
+<!-- LOG -->
+<section class="view" id="view-log">
+<div class="section-head"><div><div class="kicker">07 / سجل المباراة</div><h2>سجل المباراة</h2><p>تسلسل زمني للأفعال والقرارات التي سجلها الحكم.</p></div><button class="btn secondary" id="exportLog">نسخ السجل</button><button class="btn secondary return-inline" data-return-game="true" type="button">عودة إلى المباراة</button></div>
+<div class="panel"><div class="panel-inner"><div class="panel-title">دفتر الأحداث <small>محفوظ داخل هذه الجلسة</small></div><div class="note red">لا تغلق صفحة المباراة قبل انتهائها؛ هذه النسخة تحفظ الأحداث أثناء الجلسة الحالية فقط.</div><div class="log-list" id="logList"><div class="empty-state">لا توجد أحداث بعد. ستظهر هنا عمليات التوزيع والليل والتصويت والمخالفات.</div></div></div></div>
+<div class="panel u-mt-14"><div class="panel-inner"><div class="panel-title">إعدادات وقواعد لم تُحسم بعد</div>
+<div class="checkline"><span>تعادل التصويت</span><select class="select" id="tieRule"><option value="revote">إعادة التصويت بين المتعادلين</option><option value="none">لا يخرج أحد</option></select></div>
+<div class="checkline"><span>كشف دور اللاعب عند موته</span><select class="select" id="revealRule"><option value="now">فور موته</option><option value="end">بعد نهاية المباراة</option><option value="never">لا يُكشف</option></select></div>
+<div class="checkline"><span>هل يستطيع الطبيب حماية نفسه؟</span><input checked="" id="doctorSelf" type="checkbox"/></div>
+<div class="checkline"><span>هل يستطيع حماية نفس اللاعب ليلتين متتاليتين؟</span><input id="doctorRepeat" type="checkbox"/></div>
+<div class="checkline"><span>هل حماية الطبيب تمنع طلقة القناص أيضًا؟</span><input id="doctorBlocksSniper" type="checkbox"/></div>
+<div class="checkline"><span>كشف فريق اللاعب بعد استبعاده بسبب التجسس</span><input checked="" id="revealPeek" type="checkbox"/></div>
+<div class="checkline"><span>دور المحقق / Detective</span><span class="flag">اقتراح غير معتمد</span></div>
+<div class="note">المحقق إضافة شائعة في نسخ المافيا: يفحص لاعبًا في كل ليلة ويعرف هل هو من فريق الإمبوستر. لم أضفه إلى التوزيع لأنك لم تعتمده بعد.</div>
+<div class="checkline"><span>فوز المواطنين</span><span class="flag">خروج جميع الإمبوستر</span></div>
+<div class="checkline"><span>فوز الإمبوستر</span><span class="flag">عددهم يساوي أو يتجاوز بقية الأحياء</span></div>
+</div></div>
+</section>
+</main>
+</div>
+<div aria-hidden="true" class="more-sheet" id="moreSheet">
+<div class="more-sheet-card">
+<div class="more-sheet-title"><span>أدوات الحكم</span><button class="mini-btn" id="closeMore" type="button">إغلاق</button></div>
+<p class="small muted">هذه أدوات مساعدة، ولا تغيّر ترتيب مراحل المباراة.</p>
+<div class="more-sheet-list">
+<button data-more-view="players" type="button">إدارة اللاعبين والمخالفات</button>
+<button data-more-view="log" type="button">سجل المباراة وقواعدها</button>
+</div>
+</div></div>
+<div aria-live="polite" class="toast" id="toast" role="status"></div>
+<div aria-hidden="true" class="modal" id="endModal"><div class="modal-card"><div class="kicker">نهاية المباراة</div><h2 id="endTitle">انتهت المباراة</h2><p class="small muted u-end-message" id="endMessage">تم حسم النتيجة.</p><div class="end-roles" id="endRoles"></div><div class="btn-row"><button class="btn full" id="closeEndModal">إغلاق النتيجة</button><button class="btn secondary full" id="newMatch">إعداد مباراة جديدة</button></div></div></div>
+<div aria-hidden="true" aria-labelledby="appConfirmTitle" aria-modal="true" class="modal confirm-modal" id="confirmModal" role="dialog">
+<div class="modal-card confirm-card">
+<div class="kicker">تأكيد الإجراء</div>
+<h2 id="appConfirmTitle">هل تريد المتابعة؟</h2>
+<p class="confirm-copy" id="appConfirmText">راجع الإجراء قبل تنفيذه.</p>
+<div class="confirm-actions"><button class="btn secondary" id="appConfirmCancel" type="button">رجوع</button><button class="btn" id="appConfirmAccept" type="button">تأكيد</button></div>
+</div>
+</div>
+<div aria-hidden="true" class="modal inheritance-modal" id="inheritModal">
+<div class="modal-card inherit-card">
+<div class="kicker">تسليم دور موروث</div>
+<div id="inheritIntro">
+<h2>انتقل دور جديد إلى لاعب</h2>
+<p class="inherit-copy" id="inheritIntroText">مرّر الهاتف إلى اللاعب المعني. لن تظهر البطاقة إلا بعد تأكيدك.</p>
+<button class="btn full" id="revealInherited">عرض البطاقة السرية</button>
+</div>
+<div hidden="" id="inheritSecret">
+<div class="inherit-card-face" id="inheritCardFace"></div>
+<div class="inherit-timer-row"><span>الوقت المتبقي</span><strong id="inheritTimer">20</strong></div>
+<div class="inherit-track"><span id="inheritProgress"></span></div>
+<button class="btn secondary full" id="hideInherited">إخفاء البطاقة الآن</button>
+</div>
+<div hidden="" id="inheritDone">
+<h2>أُخفيت البطاقة</h2>
+<p class="inherit-copy">سلّم الهاتف إلى الحكم، ثم أكمل المباراة.</p>
+<button class="btn full" id="finishInheritance">تم تسليم الهاتف</button>
+</div>
+</div>
+</div>
+<div aria-hidden="true" class="modal" id="bomberModal"><div class="modal-card"><div class="kicker">قدرة البومبر</div><h2 class="modal-heading">اختيار البومبر</h2><p class="small muted u-bomber-copy" id="bomberModalText">اختَر اللاعب الذي سيخرج مع البومبر.</p><label class="field-label" for="bomberTargetSelect">الهدف</label><select class="select" id="bomberTargetSelect"></select><div class="btn-row"><button class="btn full" id="confirmBomberTarget">تأكيد الاختيار</button></div></div></div>
+<script defer="True" src="./js/storage.js"></script><script defer="True" src="./js/workflow.js"></script><script defer="True" src="./js/roles.js"></script><script defer="True" src="./js/app.js"></script></body>
+</html>

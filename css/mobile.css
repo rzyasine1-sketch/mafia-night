@@ -1,0 +1,96 @@
+
+/* Mafia Night — workflow, roster library and touch-first layout */
+.app{display:block;max-width:1120px;width:100%;padding:clamp(12px,3vw,28px);margin:0 auto;min-height:100vh}
+.main{max-width:none;width:100%}
+.sidebar,.nav,.quick-strip{display:none!important}
+.topbar{padding-bottom:14px}
+.topline{align-items:center}
+.top-actions{gap:6px}
+.top-tool-btn{min-height:38px;padding:8px 11px;border:1px solid var(--line-strong);border-radius:2px;background:var(--red);color:#fff0e7;font-size:11px;font-weight:600}
+.top-tool-btn.secondary{background:transparent;color:var(--paper)}
+.workflow-progress{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin-top:18px;padding:10px 0 2px;border-top:1px solid var(--line)}
+.workflow-step{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;color:var(--quiet);font-size:10px;text-align:center}
+.workflow-step span{width:28px;height:28px;display:grid;place-items:center;border:1px solid var(--line-strong);border-radius:50%;font:11px Georgia,serif;color:var(--muted);background:#151612}
+.workflow-step small{font-size:10px;white-space:nowrap}
+.workflow-step.current{color:var(--paper);font-weight:700}
+.workflow-step.current span{background:var(--red-dark);border-color:var(--red-light);color:#fff0e7}
+.workflow-step.done span{background:#20241e;border-color:#687864;color:#cbd6c6}
+.workflow-step.done small{color:var(--muted)}
+.roster-manager{padding:14px;border:1px solid var(--line);background:#171814}
+.roster-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.roster-count{font-size:11px;color:var(--brass);white-space:nowrap}
+.roster-add-row,.roster-inline-row{display:flex;align-items:center;gap:8px}
+.roster-add-row{margin-top:10px}
+.roster-add-row .input{min-width:0;flex:1}
+.roster-add-row .btn{flex:none}
+.roster-current-wrap{margin-top:15px}
+.subhead{font-size:11px;color:var(--paper);margin-bottom:8px}
+.roster-chips{display:flex;gap:7px;flex-wrap:wrap;min-height:36px}
+.roster-chip{display:inline-flex;align-items:center;gap:7px;padding:5px 7px 5px 10px;border:1px solid var(--line-strong);background:#20211c;color:var(--paper);font-size:11px}
+.roster-chip button{width:22px;height:22px;padding:0;border:0;background:#342225;color:#e7c7c3;font-size:16px;line-height:1}
+.roster-library-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+.compact-field{min-width:0;margin:0}
+.roster-inline-row .select{min-width:0;flex:1}
+.roster-save-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:7px;margin-top:11px}
+.roster-save-row .input{min-width:0}
+.roster-backup-row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:11px;padding-top:10px;border-top:1px solid var(--line)}
+.text-action{padding:4px 0;border:0;background:transparent;color:var(--brass);font-size:10px;text-decoration:underline;text-underline-offset:3px}
+.file-action{cursor:pointer}
+.name-count-line{margin-top:9px}
+.round-add-btn{width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--red-light);background:var(--red-dark);color:#f5e8dc;font-size:22px;line-height:1}
+.speaker-add-panel{padding:12px;margin:10px 0;border:1px solid var(--line-strong);background:#171814}
+.speaker-add-panel[hidden]{display:none}
+.speaker-add-panel .small{margin:7px 0 0}
+.panel-title{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.panel-title small{margin-right:auto}
+.return-inline{align-self:flex-start;white-space:nowrap}
+.more-sheet{align-items:flex-start;justify-content:flex-end;padding:calc(env(safe-area-inset-top) + 12px) 12px 12px;background:rgba(0,0,0,.72)}
+.more-sheet-card{width:min(360px,100%);margin:0;border:1px solid var(--line-strong);background:#171814;box-shadow:var(--shadow)}
+.more-sheet-list button{min-height:48px;text-align:right}
+.view{padding-top:18px;padding-bottom:28px}
+.view .section-head{align-items:flex-start}
+.input,.select,.textarea{min-height:46px;font-size:14px}
+.btn{min-height:46px;font-size:13px}
+.mini-btn,.round-add-btn{touch-action:manipulation}
+/* All surfaces remain flat; no gradient fills or glow effects. */
+@media(max-width:720px){
+  .app{padding:12px 12px calc(24px + env(safe-area-inset-bottom))}
+  .topline{align-items:flex-start;flex-wrap:wrap}
+  .top-actions{justify-content:flex-start}
+  .pill{font-size:10px;padding:5px 7px}
+  .top-tool-btn{min-height:36px}
+  .brandline-title{font-size:11px}
+  .page-heading{align-items:flex-start}
+  h1{font-size:24px}
+  .workflow-progress{gap:2px;margin-top:14px}
+  .workflow-step span{width:25px;height:25px;font-size:10px}
+  .workflow-step small{font-size:9px}
+  .roster-manager{padding:11px}
+  .roster-library-grid{grid-template-columns:1fr}
+  .roster-save-row{grid-template-columns:1fr 1fr}
+  .roster-save-row .input{grid-column:1/-1}
+  .roster-add-row{align-items:stretch}
+  .roster-add-row .btn{padding-inline:10px}
+  .section-head{gap:8px}
+  .return-inline{font-size:11px;padding:8px 10px;min-height:38px}
+  .grid2{grid-template-columns:1fr!important}
+  .story-banner{min-height:150px}
+  .secret-card{min-height:390px;padding:28px 18px}
+  .player-row{grid-template-columns:1fr;gap:7px}
+  .player-flags{justify-content:space-between;flex-wrap:wrap}
+  .speech-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  #startSpeech{grid-column:1/-1}
+  .vote-process{padding:12px}
+  .more-sheet-card{width:100%}
+}
+@media(max-width:360px){
+  .top-actions{width:100%}
+  .roster-add-row{flex-direction:column}
+  .roster-add-row .btn{width:100%}
+  .workflow-step small{font-size:8px}
+}
+/* Utility drawer works on desktop and mobile; it is not a persistent navigation bar. */
+.more-sheet{position:fixed;inset:0;z-index:70;display:none;align-items:flex-start;justify-content:flex-end;padding:calc(env(safe-area-inset-top) + 16px) 16px 16px;background:rgba(0,0,0,.72)}
+.more-sheet.open{display:flex}
+.more-sheet-card{width:min(380px,100%);padding:18px;background:#171814;border:1px solid var(--line-strong);border-radius:3px;box-shadow:var(--shadow)}
+.more-sheet-list button{min-height:48px;padding:10px 12px;text-align:right;background:#20211c;border:1px solid var(--line);color:var(--paper);font-size:12px}
